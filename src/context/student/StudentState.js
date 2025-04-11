@@ -2,7 +2,8 @@ import StudentContext from "./studentContext";
 import { useState } from "react";
 
 const StudentState = (props) => {
-  const host = "http://localhost:5000";
+  const host = process.env.REACT_APP_API_URL;
+
 
   const studentInitial = [];
 
