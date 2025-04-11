@@ -2,8 +2,7 @@ import StudentContext from "./studentContext";
 import { useState } from "react";
 
 const StudentState = (props) => {
-  const host = process.env.REACT_APP_API_URL;
-
+  const host = "https://student-data-2yz7.onrender.com";
 
   const studentInitial = [];
 

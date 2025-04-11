@@ -9,6 +9,7 @@ const Login = () => {
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const { login } = useAuth(); // Get login function from context
+    const host = "https://student-data-2yz7.onrender.com";
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -16,7 +17,7 @@ const Login = () => {
         setError(null);
 
         try {
-            const response = await fetch("http://localhost:5000/api/auth/login", {
+            const response = await fetch(`${host}/api/auth/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
