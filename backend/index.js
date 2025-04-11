@@ -1,9 +1,10 @@
 const express = require('express');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/auth');
-const studentRoutes = require('./routes/student'); // ✅ Add this line
+const studentRoutes = require('./routes/student');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs'); // ✅ Import fs to check if file exists
 
 const app = express();
 
@@ -20,7 +21,7 @@ app.use(express.json());
 
 // ✅ Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/student', studentRoutes); // ✅ Register student routes
+app.use('/api/student', studentRoutes);
 
 // ✅ Log registered routes
 const listRoutes = (app) => {
@@ -33,13 +34,20 @@ const listRoutes = (app) => {
 };
 listRoutes(app);
 
-// ✅ Serve static files in production
+// ✅ Serve static files in production (only if file exists)
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, 'public')));
+  const publicDir = path.join(__dirname, 'public');
+  const indexPath = path.join(publicDir, 'index.html');
 
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-  });
+  if (fs.existsSync(indexPath)) {
+    app.use(express.static(publicDir));
+
+    app.get('*', (req, res) => {
+      res.sendFile(indexPath);
+    });
+  } else {
+    console.warn('⚠️ index.html not found in public folder. Skipping static file serving.');
+  }
 }
 
 // ✅ Start server
