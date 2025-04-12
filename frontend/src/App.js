@@ -19,7 +19,7 @@ function AppContent() {
       {isAuthenticated && <Navbar />}
       <div className="container">
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route
             path="/home"
