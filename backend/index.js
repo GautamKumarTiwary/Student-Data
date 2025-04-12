@@ -14,8 +14,11 @@ const corsOptions = {
   methods: "GET,POST,PUT,DELETE",
   credentials: true,
 };
-app.use(cors(corsOptions));
-
+app.use(cors({
+  origin: "https://student-data-eosin.vercel.app", // allow your frontend domain
+  methods: ["GET", "POST"],
+  credentials: true // if you're sending cookies
+}));
 // ✅ Middleware
 app.use(express.json());
 
