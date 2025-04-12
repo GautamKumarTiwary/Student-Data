@@ -4,21 +4,18 @@ const authRoutes = require('./routes/auth');
 const studentRoutes = require('./routes/student');
 const cors = require('cors');
 const path = require('path');
-const fs = require('fs'); // ✅ Import fs to check if file exists
+const fs = require('fs');
 
 const app = express();
 
-// ✅ CORS
+// ✅ Proper CORS setup
 const corsOptions = {
-  origin: ["http://localhost:3000", "https://yourdomain.com"],
-  methods: "GET,POST,PUT,DELETE",
+  origin: ["https://student-data-eosin.vercel.app", "http://localhost:3000"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 };
-app.use(cors({
-  origin: "https://student-data-eosin.vercel.app", // allow your frontend domain
-  methods: ["GET", "POST"],
-  credentials: true // if you're sending cookies
-}));
+app.use(cors(corsOptions));
+
 // ✅ Middleware
 app.use(express.json());
 
@@ -26,7 +23,12 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/student', studentRoutes);
 
-// ✅ Log registered routes
+// ✅ CORS Test Route
+app.get('/test-cors', (req, res) => {
+  res.json({ message: 'CORS is working properly 🎉' });
+});
+
+// ✅ Log Registered Routes
 const listRoutes = (app) => {
   console.log("✅ Registered Routes:");
   app._router.stack.forEach((middleware) => {
@@ -37,7 +39,7 @@ const listRoutes = (app) => {
 };
 listRoutes(app);
 
-// ✅ Serve static files in production (only if file exists)
+// ✅ Serve static files in production (if available)
 if (process.env.NODE_ENV === 'production') {
   const publicDir = path.join(__dirname, 'public');
   const indexPath = path.join(publicDir, 'index.html');
@@ -53,7 +55,7 @@ if (process.env.NODE_ENV === 'production') {
   }
 }
 
-// ✅ Start server
+// ✅ Start Server
 const startServer = async () => {
   try {
     await connectDB();
@@ -62,6 +64,7 @@ const startServer = async () => {
       console.log(`🚀 Server running on port ${PORT}`);
     });
 
+    // ✅ Catch unhandled promise rejections
     process.on('unhandledRejection', (err) => {
       console.error(`❌ Unhandled Rejection: ${err.message}`);
       server.close(() => process.exit(1));
